@@ -1,0 +1,11 @@
+$blog-container-width: 1152px; // width of the whole content for blog like. Taken from lemonde.fr
+
+.blog-container {
+  max-width: $blog-container-width;
+  margin: auto;
+
+  @media (max-width: $blog-container-width) {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
