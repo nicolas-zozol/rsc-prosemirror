@@ -1,0 +1,34 @@
+$blog-container-width: 1152px; // width of the whole content for blog like. Taken from lemonde.fr
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: black;
+  background-color: white;
+}
+
+.blog-container {
+  max-width: $blog-container-width;
+  margin: auto;
+
+  @media (max-width: $blog-container-width) {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+h2 {
+  font-size: 2.4rem;
+  padding: 20px 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.6rem;
+    padding: 16px 4px;
+  }
+}
+
+h3 {
+  font-size: 1.8rem;
+  padding: 16px 0;
+}

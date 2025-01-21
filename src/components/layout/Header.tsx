@@ -1,6 +1,4 @@
-import Link from 'next/link'
 import './header.scss'
-import './layout.scss'
 import { SimpleLink } from '@/components/link/SimpleLink'
 
 export const Header: React.FC = () => {
