@@ -13,6 +13,7 @@ import {
 } from './autocomplete-ui'
 import { findTemporary } from './autocomplete-helpers'
 import { getFakerByMode, getSchemaTypeByMode, MODE } from './mode'
+import { getContentAt } from '@/components/prosemirror/helpers/state-helper'
 
 /**
  * This file handle the special keys and commands for the autocomplete feature.
@@ -110,10 +111,63 @@ const handleHashKey: Command = (
   return true // Indicate the key was handled
 }
 
+const handleFlowKey: Command = (
+  state: EditorState,
+  dispatch?: (tr: Transaction) => void,
+  view?: EditorView
+) => {
+  if (!view) return false
+  const { schema, tr } = state
+
+  console.log('### handleFlowKey')
+
+  // Get the caret position
+  const { $from } = state.selection
+  const caretPosition = $from.pos
+
+  const previousChar = getContentAt(state, caretPosition - 1, 1)
+  const isFlowChar = previousChar === '<'
+
+  console.log({
+    previousChar,
+    isFlowChar,
+    caretPosition,
+  })
+
+  if (isBoxOpened() && dispatch) {
+    return insertAndUpdateText(view, '>')
+  }
+
+  if (!isFlowChar) {
+    console.log('### not a flow char')
+    return insertAndUpdateText(view, '>')
+  }
+
+  // Create a temporary node with an empty string as content
+  const temporaryNode = schema.nodes.temporary.create({}, schema.text('<>'))
+  if (dispatch) {
+    console.log('### dispatch removing <')
+    tr.replaceWith(caretPosition - 1, caretPosition, temporaryNode)
+
+    const endPosition = caretPosition + 2
+    tr.setSelection(TextSelection.create(tr.doc, endPosition))
+
+    dispatch(tr)
+  } else {
+    //console.log('### no dispatch')
+  }
+
+  // Show the autocomplete box
+  showAutocompleteBox('FLOW', view)
+
+  return true // Indicate the key was handled
+}
+
 export const autocompleteCommands = keymap({
   Enter: doEnter,
   '@': handleAtKey,
   '#': handleHashKey,
+  '>': handleFlowKey,
 })
 
 // Function to show the autocomplete box
@@ -139,7 +193,7 @@ function showAutocompleteBox(mode: MODE, view: EditorView): AutocompleteBox {
     },
   })
 
-  autocomplete.setPosition(x + 30, y + 40) // Adjust position
+  autocomplete.setPosition(x + 10, y + 25) // Adjust position
   autocomplete
     .update('') // Initialize with the current match string
     .catch(error => {

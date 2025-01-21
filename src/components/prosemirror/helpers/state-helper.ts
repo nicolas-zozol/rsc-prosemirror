@@ -83,3 +83,18 @@ export function findParentNodeClosestToPos(
     }
   }
 }
+
+export function getContentAt(
+  state: EditorState,
+  pos: number,
+  range: number = 1
+) {
+  const doc = state.doc
+
+  // Ensure the range doesn't go out of bounds
+  const start = pos
+  const end = Math.min(doc.content.size, pos + range)
+
+  // Extract text content within the range
+  return doc.textBetween(start, end, '\n', '\uFFFC') // \uFFFC for leaf nodes
+}

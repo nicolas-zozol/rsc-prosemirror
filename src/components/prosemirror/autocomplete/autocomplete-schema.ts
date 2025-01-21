@@ -47,7 +47,7 @@ const autocompleteNodes: Record<string, NodeSpec> = {
     toDOM: node => [
       'span',
       { class: 'flow', 'data-name': node.attrs.name },
-      `#${node.attrs.name}`,
+      `<>${node.attrs.name}`,
     ],
   },
 }

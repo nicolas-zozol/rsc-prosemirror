@@ -1,6 +1,6 @@
 import { Schema } from 'prosemirror-model'
 import { Mode } from 'node:fs'
-import { getFakeHashtags, getFakeUsers } from './fake-data'
+import { getFakeFlows, getFakeHashtags, getFakeUsers } from './fake-data'
 
 export type MODE = 'PEOPLE' | 'HASHTAG' | 'FLOW'
 
@@ -25,7 +25,7 @@ export function getFakerByMode(mode: Mode): Faker {
     case 'HASHTAG':
       return getFakeHashtags
     case 'FLOW':
-      return getFakeUsers
+      return getFakeFlows
     default:
       throw new Error(`Unknown mode: ${mode}`)
   }

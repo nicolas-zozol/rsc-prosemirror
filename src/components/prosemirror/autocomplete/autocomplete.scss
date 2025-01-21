@@ -37,7 +37,8 @@
   }
 
   span.mention,
-  span.hashtag {
+  span.hashtag,
+  span.flow {
     padding: 3px;
     color: white;
     border-radius: 5px;
@@ -48,5 +49,10 @@
   }
   span.hashtag {
     background-color: rgba(166, 221, 111, 0.78);
+  }
+
+  span.flow {
+    background-color: rgba(181, 41, 238, 0.5);
+    font-style: italic;
   }
 }

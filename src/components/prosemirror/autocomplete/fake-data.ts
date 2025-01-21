@@ -45,3 +45,18 @@ export async function getFakeHashtags(matchString: string) {
     tag.toLowerCase().startsWith(matchString.toLowerCase())
   )
 }
+
+const fakeFlows = [
+  'A fit body, a calm mind, a house full of love',
+  'Information is everywhere ',
+  'The only way to get smarter is by playing a smarter opponent',
+  'Sophisticated foods are bittersweet',
+  'Success is the enemy of learning',
+  'This is such a short and precious life',
+]
+
+export async function getFakeFlows(matchString: string) {
+  return fakeFlows.filter(flow =>
+    flow.toLowerCase().startsWith(matchString.toLowerCase())
+  )
+}
