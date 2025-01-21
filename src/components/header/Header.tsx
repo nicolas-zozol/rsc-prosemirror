@@ -19,17 +19,10 @@ export const Header: React.FC = () => {
           <span>
             <SimpleLink>BLOCKCHAIN</SimpleLink>
           </span>
-          <span>
-            <SimpleLink>SOLIDITY</SimpleLink>
-          </span>
-
-          <span>
-            <SimpleLink>ETHERS.js</SimpleLink>
-          </span>
         </div>
         <div className={'end'}>
           <span>
-            <SimpleLink href="/blog">BLOG</SimpleLink>
+            <SimpleLink href="/">BLOG</SimpleLink>
           </span>
         </div>
       </nav>
