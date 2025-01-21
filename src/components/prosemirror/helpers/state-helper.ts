@@ -1,4 +1,4 @@
-import { EditorState, Selection } from 'prosemirror-state'
+import { EditorState, Selection, Transaction } from 'prosemirror-state'
 import { NodeWithPos, Predicate } from './types'
 import { ResolvedPos, Node } from 'prosemirror-model'
 
@@ -97,4 +97,14 @@ export function getContentAt(
 
   // Extract text content within the range
   return doc.textBetween(start, end, '\n', '\uFFFC') // \uFFFC for leaf nodes
+}
+
+export function removeNode(
+  state: EditorState,
+  node: Node,
+  pos: number
+): Transaction {
+  const tr = state.tr
+  tr.delete(pos, pos + node.nodeSize)
+  return tr
 }

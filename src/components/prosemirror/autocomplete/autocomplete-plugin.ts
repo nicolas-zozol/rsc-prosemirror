@@ -10,10 +10,17 @@ import {
   AutocompleteBox,
   getAutocompleteBox,
   isBoxOpened,
+  resetAutocompleteBox,
 } from './autocomplete-ui'
-import { findTemporary } from './autocomplete-helpers'
+import {
+  detectWritingIntoTemporary,
+  findTemporary,
+} from './autocomplete-helpers'
 import { getFakerByMode, getSchemaTypeByMode, MODE } from './mode'
-import { getContentAt } from '@/components/prosemirror/helpers/state-helper'
+import {
+  getContentAt,
+  removeNode,
+} from '@/components/prosemirror/helpers/state-helper'
 
 /**
  * This file handle the special keys and commands for the autocomplete feature.
@@ -23,8 +30,6 @@ import { getContentAt } from '@/components/prosemirror/helpers/state-helper'
  * or even exiting it when no content is available.
  * This is done in the dispatchAutocompleteTransaction function.
  *
- * @param state
- * @param dispatch
  */
 
 const doEnter: Command = () => {
@@ -67,8 +72,6 @@ const handleAtKey: Command = (
     tr.setSelection(TextSelection.create(tr.doc, endPosition))
 
     dispatch(tr)
-  } else {
-    //console.log('### no dispatch')
   }
 
   // Show the autocomplete box
@@ -119,8 +122,6 @@ const handleFlowKey: Command = (
   if (!view) return false
   const { schema, tr } = state
 
-  console.log('### handleFlowKey')
-
   // Get the caret position
   const { $from } = state.selection
   const caretPosition = $from.pos
@@ -128,25 +129,17 @@ const handleFlowKey: Command = (
   const previousChar = getContentAt(state, caretPosition - 1, 1)
   const isFlowChar = previousChar === '<'
 
-  console.log({
-    previousChar,
-    isFlowChar,
-    caretPosition,
-  })
-
   if (isBoxOpened() && dispatch) {
     return insertAndUpdateText(view, '>')
   }
 
   if (!isFlowChar) {
-    console.log('### not a flow char')
     return insertAndUpdateText(view, '>')
   }
 
   // Create a temporary node with an empty string as content
   const temporaryNode = schema.nodes.temporary.create({}, schema.text('<>'))
   if (dispatch) {
-    console.log('### dispatch removing <')
     tr.replaceWith(caretPosition - 1, caretPosition, temporaryNode)
 
     const endPosition = caretPosition + 2
@@ -163,11 +156,56 @@ const handleFlowKey: Command = (
   return true // Indicate the key was handled
 }
 
+const handleDelInterception: Command = (
+  state: EditorState,
+  dispatch?: (tr: Transaction) => void,
+  view?: EditorView
+) => {
+  const previousState = state
+
+  // Apply a dummy transaction for DEL
+  let transaction = state.tr.delete(
+    Math.max(0, state.selection.from - 1), // Go one step backward
+    state.selection.to || state.selection.from
+  )
+  let newState = state.apply(transaction)
+
+  // Check if we were writing into the `temporaryPeople` node
+  const wasWritingBefore = detectWritingIntoTemporary(previousState)
+  const isWritingAfter = detectWritingIntoTemporary(newState)
+
+  const temporary = findTemporary(newState)
+  let temporaryEmpty = false
+  if (temporary) {
+    if (temporary.node.textContent === '') {
+      temporaryEmpty = true
+      // adding to the transaction
+      transaction = state.tr.delete(
+        Math.max(0, state.selection.from - 2), // Go one step backward
+        state.selection.to || state.selection.from
+      )
+    }
+  }
+
+  if (temporaryEmpty || (wasWritingBefore && !isWritingAfter)) {
+    // Node was removed, reset the autocomplete box
+    getAutocompleteBox()?.exit()
+  }
+
+  // Let ProseMirror handle the actual delete operation
+  if (dispatch) {
+    dispatch(transaction)
+  }
+  return true
+}
+
 export const autocompleteCommands = keymap({
   Enter: doEnter,
   '@': handleAtKey,
   '#': handleHashKey,
   '>': handleFlowKey,
+  Delete: handleDelInterception,
+  Backspace: handleDelInterception,
 })
 
 // Function to show the autocomplete box
@@ -205,7 +243,6 @@ function showAutocompleteBox(mode: MODE, view: EditorView): AutocompleteBox {
 
 // Function to handle inserting a PeopleNode
 function insertModeNode(view: EditorView, name: string, mode: MODE): void {
-  console.log('>>>> Inserting', { name, mode })
   const { state, dispatch } = view
   const { schema, tr } = state
 
