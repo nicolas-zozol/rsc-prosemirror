@@ -11,6 +11,6 @@ export function dispatchTelegramTransaction(
     console.log('Transaction update', transaction)
   }
 
-  let newState = view.state.apply(transaction)
+  const newState = view.state.apply(transaction)
   view.updateState(newState)
 }

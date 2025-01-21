@@ -10,7 +10,7 @@ export const ProseMirrorEditorAutocomplete = () => {
 
   useEffect(() => {
     const editorItem = document.querySelector('#editor-autocomplete')!
-    const { view, state } = createProseEditorAutocomplete(editorItem)
+    const { view } = createProseEditorAutocomplete(editorItem)
 
     return () => {
       view.destroy()

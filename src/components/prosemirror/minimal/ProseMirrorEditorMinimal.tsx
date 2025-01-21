@@ -8,7 +8,7 @@ export const ProseMirrorEditorMinimal = () => {
 
   useEffect(() => {
     const editorItem = document.querySelector('#editor-minimal')!
-    const { view, state } = createProseEditorMinimal(editorItem)
+    const { view } = createProseEditorMinimal(editorItem)
 
     return () => {
       view.destroy()

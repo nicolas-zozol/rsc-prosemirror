@@ -1,4 +1,4 @@
-import { Schema, Node } from 'prosemirror-model'
+import { Schema } from 'prosemirror-model'
 import { validateNodeAgainstSchema } from './schema-helper'
 
 describe('validateNodeAgainstSchema', () => {

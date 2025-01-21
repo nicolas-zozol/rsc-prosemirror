@@ -1,4 +1,4 @@
-import { Fragment, Node, Schema, DOMParser } from 'prosemirror-model'
+import { Node, Schema } from 'prosemirror-model'
 
 // Helper to validate a Node against the schema
 

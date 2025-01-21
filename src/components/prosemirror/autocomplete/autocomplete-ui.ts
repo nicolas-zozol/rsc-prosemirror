@@ -117,7 +117,7 @@ export class AutocompleteBox {
     })
 
     // mouseover event:  setting htmlItem active on hovering
-    this.htmlItems.forEach((item, index) => {
+    this.htmlItems.forEach(item => {
       item.addEventListener('mouseover', () => {
         const itemIndex = Number(item.getAttribute('data-index') || '0')
         item.classList.add('active')

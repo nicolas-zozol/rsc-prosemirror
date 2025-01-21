@@ -1,11 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
-import {
-  createDocFromContent,
-  createNodeFromContent,
-  stringToDOMNode,
-  wrapAsDoc,
-} from './doc-helper'
-import { DOMParser, Fragment, Schema, Node } from 'prosemirror-model'
+import { createDocFromContent, createNodeFromContent } from './doc-helper'
+import { Fragment, Schema, Node } from 'prosemirror-model'
 import { fragmentToHtml, nodeToHtml } from './node-helper'
 
 describe('createNodeFromContent', () => {

@@ -5,7 +5,6 @@ import {
   Transaction,
 } from 'prosemirror-state'
 import { keymap } from 'prosemirror-keymap'
-import { getFakeHashtags, getFakeUsers } from './fake-data'
 import { EditorView } from 'prosemirror-view'
 import {
   AutocompleteBox,
@@ -27,7 +26,7 @@ import { getFakerByMode, getSchemaTypeByMode, MODE } from './mode'
  * @param dispatch
  */
 
-const doEnter: Command = (state: EditorState, dispatch) => {
+const doEnter: Command = () => {
   if (isBoxOpened()) {
     const box = getAutocompleteBox()!
     const activeItem = box.getActiveItem()

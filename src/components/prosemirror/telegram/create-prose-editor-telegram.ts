@@ -7,12 +7,12 @@ import { dispatchTelegramTransaction } from './dispatch-telegram-transaction'
 import { ProseEditor } from '@/components/prosemirror/helpers/types'
 
 export function createProseEditorTelegram(domElement: Element): ProseEditor {
-  let state = EditorState.create({
+  const state = EditorState.create({
     schema: telegramSchema,
     plugins: [telegramCommands, transformStopToEnd, truncateAfterEndPlugin],
   })
 
-  let view = new EditorView(domElement, {
+  const view = new EditorView(domElement, {
     state,
 
     dispatchTransaction: transaction => {
@@ -20,9 +20,4 @@ export function createProseEditorTelegram(domElement: Element): ProseEditor {
     },
   })
   return { view, state }
-}
-function dispatchBasicTransaction(view: EditorView, transaction: Transaction) {
-  console.log('Transaction update', transaction)
-  let newState = view.state.apply(transaction)
-  view.updateState(newState)
 }

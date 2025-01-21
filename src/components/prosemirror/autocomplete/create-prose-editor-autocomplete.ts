@@ -9,12 +9,12 @@ import { ProseEditor } from '@/components/prosemirror/helpers/types'
 export function createProseEditorAutocomplete(
   domElement: Element
 ): ProseEditor {
-  let state = EditorState.create({
+  const state = EditorState.create({
     schema: autocompleteSchema,
     plugins: [autocompleteCommands],
   })
 
-  let view = new EditorView(domElement, {
+  const view = new EditorView(domElement, {
     state,
 
     dispatchTransaction: transaction => {

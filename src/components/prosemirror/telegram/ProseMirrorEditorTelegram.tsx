@@ -8,7 +8,7 @@ export const ProseMirrorEditorTelegram = () => {
 
   useEffect(() => {
     const editorItem = document.querySelector('#editor-telegram')!
-    const { view, state } = createProseEditorTelegram(editorItem)
+    const { view } = createProseEditorTelegram(editorItem)
 
     return () => {
       view.destroy()

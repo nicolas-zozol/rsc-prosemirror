@@ -4,12 +4,12 @@ import { minimalSchema } from './minimal-schema'
 import { ProseEditor } from '@/components/prosemirror/helpers/types'
 
 export function createProseEditorMinimal(domElement: Element): ProseEditor {
-  let state = EditorState.create({
+  const state = EditorState.create({
     schema: minimalSchema,
     plugins: [], // minimalSchemaWithParagraph needs keymap
   })
 
-  let view = new EditorView(domElement, {
+  const view = new EditorView(domElement, {
     state,
 
     dispatchTransaction: transaction => {
@@ -21,6 +21,6 @@ export function createProseEditorMinimal(domElement: Element): ProseEditor {
 
 function dispatchBasicTransaction(view: EditorView, transaction: Transaction) {
   console.log('Transaction update', transaction)
-  let newState = view.state.apply(transaction)
+  const newState = view.state.apply(transaction)
   view.updateState(newState)
 }
