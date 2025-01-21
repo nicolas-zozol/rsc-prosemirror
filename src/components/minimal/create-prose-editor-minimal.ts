@@ -1,7 +1,7 @@
-import { EditorState, Transaction } from 'prosemirror-state'
+import { EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
-import { minimalSchema } from './minimal-schema'
-import { ProseEditor } from '@/components/prosemirror/helpers/types'
+import { dispatchBasicTransaction, ProseEditor } from '../prose-editor'
+import { minimalSchema, minimalSchemaWithParagraph } from './minimal-schema'
 
 export function createProseEditorMinimal(domElement: Element): ProseEditor {
   let state = EditorState.create({
@@ -17,13 +17,4 @@ export function createProseEditorMinimal(domElement: Element): ProseEditor {
     },
   })
   return { view, state }
-}
-
-export function dispatchBasicTransaction(
-  view: EditorView,
-  transaction: Transaction
-) {
-  console.log('Transaction update', transaction)
-  let newState = view.state.apply(transaction)
-  view.updateState(newState)
 }

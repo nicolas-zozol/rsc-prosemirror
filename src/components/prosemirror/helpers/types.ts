@@ -1,5 +1,11 @@
 import { Node } from 'prosemirror-model'
+import { EditorState } from 'prosemirror-state'
+import { EditorView } from 'prosemirror-view'
 
+export interface ProseEditor {
+  view: EditorView
+  state: EditorState
+}
 export type Predicate = (node: Node) => boolean
 
 export interface NodeWithPos {

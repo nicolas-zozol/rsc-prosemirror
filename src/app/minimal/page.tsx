@@ -1,6 +1,6 @@
 import { Header } from '@/components/header/Header'
-import { ReactElement } from 'react'
-import EmptyLayout from '@/components/layout/EmptyLayout'
+import { ProseMirrorEditorMinimal } from '@/components/prosemirror/minimal/ProseMirrorEditorMinimal'
+import './pm.css'
 
 export default function Minimal() {
   return (
@@ -12,9 +12,9 @@ export default function Minimal() {
       <section>
         <div>This is the minimal editor</div>
       </section>
+      <section>
+        <ProseMirrorEditorMinimal />
+      </section>
     </main>
   )
-}
-Minimal.getLayout = function getLayout(page: ReactElement) {
-  return <EmptyLayout>{page}</EmptyLayout>
 }
