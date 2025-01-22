@@ -13,8 +13,7 @@ body {
   margin: auto;
 
   @media (max-width: $blog-container-width) {
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 0 20px;
   }
 }
 

@@ -6,23 +6,17 @@ export const Header: React.FC = () => {
     <header className={'rsc-header'}>
       <nav className={'blog-container'}>
         <span className={'mr-20'}>
-          <SimpleLink href="/">Home</SimpleLink>
+          <SimpleLink href="https://www.robusta.build">Home</SimpleLink>
         </span>
 
         <div className={'start'}>
-          <span>
-            <SimpleLink>CLEAN CODE</SimpleLink>
-          </span>
-          <span>
-            <SimpleLink>WEB</SimpleLink>
-          </span>
-          <span>
-            <SimpleLink>BLOCKCHAIN</SimpleLink>
-          </span>
+          <span>CLEAN CODE</span>
+          <span>WEB</span>
+          <span>BLOCKCHAIN</span>
         </div>
         <div className={'end'}>
           <span>
-            <SimpleLink href="/">BLOG</SimpleLink>
+            <SimpleLink href="https://www.robusta.build/blog">Blog</SimpleLink>
           </span>
         </div>
       </nav>

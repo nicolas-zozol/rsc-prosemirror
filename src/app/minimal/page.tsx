@@ -1,18 +1,25 @@
 import { Header } from '@/components/header/Header'
 import { ProseMirrorEditorMinimal } from '@/components/prosemirror/minimal/ProseMirrorEditorMinimal'
 import './pm.css'
+import PageLinkNavigator from '@/components/link/PageLinkNavigator'
 
 export default function Minimal() {
+  const pages = [
+    { name: 'Suggest Box', href: '/' },
+    { name: 'Telegram', href: '/telegram' },
+    { name: 'Minimal', href: '/minimal' },
+  ]
   return (
-    <main className={'blog-container'}>
+    <main className={'blog-container'} id={'telegram'}>
       <Header />
-      <section className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h3>Robusta Build: minimal ProseMirror demonstration</h3>
+      <h3>ProseMirror demonstration: minimal editor</h3>
+      <section className={'mt-2'}>
+        <PageLinkNavigator pages={pages} />
       </section>
-      <section>
-        <div>This is the minimal editor</div>
+      <section className={'mt-6'}>
+        <div>This is the minimal editor: Free typing, no feature</div>
       </section>
-      <section>
+      <section className={'mt-6'}>
         <ProseMirrorEditorMinimal />
       </section>
     </main>

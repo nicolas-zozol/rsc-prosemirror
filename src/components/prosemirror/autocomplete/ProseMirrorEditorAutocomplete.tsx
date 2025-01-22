@@ -18,7 +18,7 @@ export const ProseMirrorEditorAutocomplete = () => {
   }, [])
 
   return (
-    <div ref={parentRef} className={'root_autocomplete'}>
+    <div ref={parentRef} className={'autocomplete-root'}>
       <div
         id="editor-autocomplete"
         ref={editorRef}
