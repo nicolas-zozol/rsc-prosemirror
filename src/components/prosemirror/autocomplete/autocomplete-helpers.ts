@@ -1,4 +1,6 @@
 import { EditorState } from 'prosemirror-state'
+import { Node } from 'prosemirror-model'
+
 import { findNodeByName } from '../helpers/state-helper'
 import { NodeWithPos } from '../helpers/types'
 import { MODE } from '@/components/prosemirror/autocomplete/mode'
@@ -29,4 +31,26 @@ export function extractMatchString(state: EditorState, mode: MODE): string {
   const discriminator = mode === 'FLOW' ? 2 : 1
 
   return node.node.textContent?.substring(discriminator) || ''
+}
+
+export function replaceTemporaryNode(state: EditorState): EditorState {
+  const nodeWithPos = findTemporary(state)
+  if (!nodeWithPos) {
+    return state
+  }
+  const { node, pos } = nodeWithPos
+  const text = node.textContent || ''
+  return replaceNodeByText(state, node, pos, text)
+}
+
+export function replaceNodeByText(
+  state: EditorState,
+  node: Node,
+  pos: number,
+  text: string
+): EditorState {
+  const { tr, schema } = state
+  const nodeSize = node.nodeSize
+  tr.replaceWith(pos, pos + nodeSize, schema.text(text))
+  return state.apply(tr)
 }

@@ -1,11 +1,11 @@
 import { EditorView } from 'prosemirror-view'
-import { EditorState, Transaction } from 'prosemirror-state'
-import { Node } from 'prosemirror-model'
+import { Transaction } from 'prosemirror-state'
 import { getAutocompleteBox } from './autocomplete-ui'
 import {
   detectWritingIntoTemporary,
   extractMatchString,
   findTemporary,
+  replaceNodeByText,
 } from './autocomplete-helpers'
 
 /**
@@ -41,6 +41,7 @@ export function dispatchAutocompleteTransaction(
           // box exited, replace the temporary node by the matchString
           box.exit()
           const { pos, node } = tempNode
+          // That depends on the mode !
           newState = replaceNodeByText(newState, node, pos, matchString)
           view.updateState(newState)
         }
@@ -49,16 +50,4 @@ export function dispatchAutocompleteTransaction(
   } else {
     //console.log('Not writing into tempPeople')
   }
-}
-
-function replaceNodeByText(
-  state: EditorState,
-  node: Node,
-  pos: number,
-  text: string
-): EditorState {
-  const { tr, schema } = state
-  const nodeSize = node.nodeSize
-  tr.replaceWith(pos, pos + nodeSize, schema.text(text))
-  return state.apply(tr)
 }

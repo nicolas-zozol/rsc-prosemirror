@@ -221,7 +221,8 @@ export class AutocompleteBox {
         }
         break
       case 'Escape':
-        this.exit()
+        console.log('closing')
+        this.close()
         break
     }
   }

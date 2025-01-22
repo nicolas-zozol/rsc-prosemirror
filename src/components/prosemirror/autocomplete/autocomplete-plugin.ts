@@ -14,6 +14,7 @@ import {
 import {
   detectWritingIntoTemporary,
   findTemporary,
+  replaceTemporaryNode,
 } from './autocomplete-helpers'
 import { getFakerByMode, getSchemaTypeByMode, MODE } from './mode'
 import { getContentAt } from '@/components/prosemirror/helpers/state-helper'
@@ -50,15 +51,14 @@ const handleAtKey: Command = (
   view?: EditorView
 ) => {
   if (!view) return false
+  if (isBoxOpened()) {
+    return false
+  }
   const { schema, tr } = state
 
   // Get the caret position
   const { $from } = state.selection
   const caretPosition = $from.pos
-
-  if (isBoxOpened() && dispatch) {
-    return insertAndUpdateText(view, '@')
-  }
 
   // Create a temporary node with an empty string as content
   const temporaryNode = schema.nodes.temporary.create({}, schema.text('@'))
@@ -82,15 +82,14 @@ const handleHashKey: Command = (
   view?: EditorView
 ) => {
   if (!view) return false
+  if (isBoxOpened()) {
+    return false
+  }
   const { schema, tr } = state
 
   // Get the caret position
   const { $from } = state.selection
   const caretPosition = $from.pos
-
-  if (isBoxOpened() && dispatch) {
-    return insertAndUpdateText(view, '#')
-  }
 
   // Create a temporary node with an empty string as content
   const temporaryNode = schema.nodes.temporary.create({}, schema.text('#'))
@@ -100,8 +99,6 @@ const handleHashKey: Command = (
     tr.setSelection(TextSelection.create(tr.doc, endPosition))
 
     dispatch(tr)
-  } else {
-    //console.log('### no dispatch')
   }
 
   // Show the autocomplete box
@@ -238,6 +235,8 @@ function showAutocompleteBox(mode: MODE, view: EditorView): AutocompleteBox {
       autocomplete.exit()
     },
     onClose: () => {
+      view.updateState(replaceTemporaryNode(view.state))
+
       console.log('Autocomplete box closed')
     },
   })
@@ -267,13 +266,4 @@ function insertModeNode(view: EditorView, name: string, mode: MODE): void {
     tr.insertText(' ')
     dispatch(transaction)
   }
-}
-
-function insertAndUpdateText(view: EditorView, text: string): boolean {
-  const { state } = view
-
-  const transaction = state.tr.insertText(text)
-  const newState = state.apply(transaction)
-  view.updateState(newState)
-  return true
 }
