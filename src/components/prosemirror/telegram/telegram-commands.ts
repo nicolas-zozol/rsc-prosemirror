@@ -5,7 +5,8 @@ const insertStopNode: Command = (state: EditorState, dispatch) => {
   const { schema, tr } = state
   const stopNode = schema.nodes.stop.create()
   if (dispatch) {
-    dispatch(tr.replaceSelectionWith(stopNode).scrollIntoView())
+    tr.replaceSelectionWith(stopNode).scrollIntoView()
+    dispatch(tr)
   }
   return true
 }

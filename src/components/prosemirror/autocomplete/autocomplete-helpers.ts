@@ -1,5 +1,5 @@
-import { EditorState } from 'prosemirror-state'
-import { Node } from 'prosemirror-model'
+import { EditorState, Transaction } from 'prosemirror-state'
+import { Node, Schema } from 'prosemirror-model'
 
 import { findNodeByName } from '../helpers/state-helper'
 import { NodeWithPos } from '../helpers/types'
@@ -34,23 +34,24 @@ export function extractMatchString(state: EditorState, mode: MODE): string {
 }
 
 // TODO: replace ths with a transaction
-export function replaceTemporaryNode(state: EditorState): EditorState {
+export function replaceTemporaryNode(state: EditorState): Transaction {
+  const { tr } = state
   const nodeWithPos = findTemporary(state)
   if (!nodeWithPos) {
-    return state
+    return tr
   }
   const { node, pos } = nodeWithPos
   const text = node.textContent || ''
-  return replaceNodeByText(state, node, pos, text)
+  return replaceNodeByText(tr, state.schema, node, pos, text)
 }
 
 export function replaceNodeByText(
-  state: EditorState,
+  tr: Transaction,
+  schema: Schema,
   node: Node,
   pos: number,
   text: string
-): EditorState {
-  const { tr, schema } = state
+): Transaction {
   const nodeSize = node.nodeSize
-  return state.apply(tr.replaceWith(pos, pos + nodeSize, schema.text(text)))
+  return tr.replaceWith(pos, pos + nodeSize, schema.text(text))
 }

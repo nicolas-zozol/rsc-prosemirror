@@ -33,9 +33,7 @@ import { getContentAt } from '@/components/prosemirror/helpers/state-helper'
 const doEnter: Command = () => {
   if (isBoxOpened()) {
     const box = getAutocompleteBox()!
-    //debugger
     const activeItem = box.getActiveItem()
-    console.log('## doEnter', activeItem)
     if (!activeItem) {
       return false
     } else {
@@ -44,6 +42,7 @@ const doEnter: Command = () => {
     }
   }
 
+  // nothing to select, make a paragraph with classic plugin
   return false
 }
 
@@ -58,10 +57,7 @@ const handleAtKey: Command = (
     return false
   }
   const { schema, tr } = state
-
-  // Get the caret position
-  const { $from } = state.selection
-  const caretPosition = $from.pos
+  const caretPosition = state.selection.$from.pos
 
   // Create a temporary node with an empty string as content
   const temporaryNode = schema.nodes.temporary.create({}, schema.text('@'))
@@ -73,9 +69,7 @@ const handleAtKey: Command = (
     dispatch(tr)
   }
 
-  // Show the autocomplete box
   showAutocompleteBox('PEOPLE', view)
-
   return true // Indicate the key was handled
 }
 
@@ -89,10 +83,7 @@ const handleHashKey: Command = (
     return false
   }
   const { schema, tr } = state
-
-  // Get the caret position
-  const { $from } = state.selection
-  const caretPosition = $from.pos
+  const caretPosition = state.selection.$from.pos
 
   // Create a temporary node with an empty string as content
   const temporaryNode = schema.nodes.temporary.create({}, schema.text('#'))
@@ -100,14 +91,11 @@ const handleHashKey: Command = (
     tr.insert(caretPosition, temporaryNode)
     const endPosition = caretPosition + 2
     tr.setSelection(TextSelection.create(tr.doc, endPosition))
-
     dispatch(tr)
   }
 
-  // Show the autocomplete box
   showAutocompleteBox('HASHTAG', view)
-
-  return true // Indicate the key was handled
+  return true
 }
 
 const handleFlowKey: Command = (
@@ -116,20 +104,17 @@ const handleFlowKey: Command = (
   view?: EditorView
 ) => {
   if (!view) return false
-  const { schema, tr } = state
-
-  // Get the caret position
-  const { $from } = state.selection
-  const caretPosition = $from.pos
-
-  const previousChar = getContentAt(state, caretPosition - 1, 1)
-  const isFlowChar = previousChar === '<'
-
   if (isBoxOpened() && dispatch) {
     return false
   }
 
+  const { schema, tr } = state
+  const caretPosition = state.selection.$from.pos
+  const previousChar = getContentAt(state, caretPosition - 1, 1)
+  const isFlowChar = previousChar === '<'
+
   if (!isFlowChar) {
+    // Not in the <> combination
     return false
   }
 
@@ -143,17 +128,13 @@ const handleFlowKey: Command = (
 
     dispatch(tr)
   }
-
-  // Show the autocomplete box
   showAutocompleteBox('FLOW', view)
-
-  return true // Indicate the key was handled
+  return true
 }
 
 const handleDelInterception: Command = (
   state: EditorState,
-  dispatch?: (tr: Transaction) => void,
-  view?: EditorView
+  dispatch?: (tr: Transaction) => void
 ) => {
   const previousState = state
 
@@ -196,7 +177,6 @@ const handleDelInterception: Command = (
 const handleNavigation: (key: string) => Command = key => {
   return () => {
     if (isBoxOpened()) {
-      console.log('## handleNavigation', key)
       const box = getAutocompleteBox()!
       box.handleKeyDown(key)
       return true
@@ -208,7 +188,6 @@ const handleNavigation: (key: string) => Command = key => {
 
 const handleSpace: Command = (state: EditorState) => {
   if (isBoxOpened()) {
-    console.log('## handleSpace')
     const box = getAutocompleteBox()!
 
     if (box.mode !== 'HASHTAG') {
@@ -255,12 +234,9 @@ function showAutocompleteBox(mode: MODE, view: EditorView): AutocompleteBox {
       autocomplete.exit()
     },
     onClose: () => {
-      view.updateState(replaceTemporaryNode(view.state))
-
-      console.log('Autocomplete box closed')
+      view.dispatch(replaceTemporaryNode(view.state))
     },
     onNoMatch: matchString => {
-      console.log('No match for:', matchString)
       handleNoMatch(matchString, mode, view)
     },
   })
@@ -296,8 +272,8 @@ function handleNoMatch(matchString: string, mode: MODE, view: EditorView) {
   const { state, dispatch } = view
   const box = getAutocompleteBox()
   if (mode === 'PEOPLE') {
-    const stateWithoutPeople = replaceTemporaryNode(state)
-    view.updateState(stateWithoutPeople)
+    const trRemovingPeople = replaceTemporaryNode(state)
+    view.dispatch(trRemovingPeople)
     box?.exit()
     return
   } else {
