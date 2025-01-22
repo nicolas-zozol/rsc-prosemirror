@@ -13,6 +13,7 @@ import {
 } from './autocomplete-ui'
 import {
   detectWritingIntoTemporary,
+  extractMatchString,
   findTemporary,
   replaceTemporaryNode,
 } from './autocomplete-helpers'
@@ -203,6 +204,22 @@ const handleNavigation: (key: string) => Command = key => {
   }
 }
 
+const handleSpace: Command = (state: EditorState) => {
+  if (isBoxOpened()) {
+    console.log('## handleSpace')
+    const box = getAutocompleteBox()!
+
+    if (box.mode !== 'HASHTAG') {
+      return false
+    }
+    const matchString = extractMatchString(state, 'HASHTAG')
+    box.onSelect(matchString)
+    return true
+  } else {
+    return false
+  }
+}
+
 export const autocompleteCommands = keymap({
   Enter: doEnter,
   Tab: doEnter,
@@ -214,6 +231,7 @@ export const autocompleteCommands = keymap({
   ArrowDown: handleNavigation('ArrowDown'),
   ArrowUp: handleNavigation('ArrowUp'),
   Escape: handleNavigation('Escape'),
+  Space: handleSpace,
 })
 
 // Function to show the autocomplete box

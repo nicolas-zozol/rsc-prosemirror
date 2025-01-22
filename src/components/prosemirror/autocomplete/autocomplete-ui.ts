@@ -224,6 +224,11 @@ export class AutocompleteBox {
         console.log('closing')
         this.close()
         break
+      case 'Space':
+        if (this.mode === 'HASHTAG' && this.activeIndex !== -1) {
+          this.selectItem(this.activeIndex)
+        }
+        break
     }
   }
   private scrollToActiveItem(index: number): void {
