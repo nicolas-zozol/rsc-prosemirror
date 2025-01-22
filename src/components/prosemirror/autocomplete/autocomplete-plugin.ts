@@ -130,11 +130,11 @@ const handleFlowKey: Command = (
   const isFlowChar = previousChar === '<'
 
   if (isBoxOpened() && dispatch) {
-    return insertAndUpdateText(view, '>')
+    return false
   }
 
   if (!isFlowChar) {
-    return insertAndUpdateText(view, '>')
+    return false
   }
 
   // Create a temporary node with an empty string as content

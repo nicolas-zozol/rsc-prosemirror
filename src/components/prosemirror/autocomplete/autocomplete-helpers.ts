@@ -1,6 +1,7 @@
 import { EditorState } from 'prosemirror-state'
 import { findNodeByName } from '../helpers/state-helper'
 import { NodeWithPos } from '../helpers/types'
+import { MODE } from '@/components/prosemirror/autocomplete/mode'
 
 export function detectWritingIntoTemporary(state: EditorState): boolean {
   return findTemporary(state) !== null
@@ -20,11 +21,12 @@ export function findTemporary(state: EditorState): NodeWithPos | null {
 }
 
 // Helper to extract the match string (text without @ symbol)
-export function extractMatchString(state: EditorState): string {
+export function extractMatchString(state: EditorState, mode: MODE): string {
   const node = findTemporary(state)
   if (!node) {
     return ''
   }
+  const discriminator = mode === 'FLOW' ? 2 : 1
 
-  return node.node.textContent?.substring(1) || ''
+  return node.node.textContent?.substring(discriminator) || ''
 }

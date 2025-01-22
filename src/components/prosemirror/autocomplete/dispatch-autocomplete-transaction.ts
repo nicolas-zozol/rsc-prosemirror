@@ -29,7 +29,7 @@ export function dispatchAutocompleteTransaction(
   const tempNode = findTemporary(newState)
 
   if (writingIntoTemporary && box && tempNode) {
-    const matchString = extractMatchString(newState)
+    const matchString = extractMatchString(newState, box.mode)
 
     box
       .update(matchString)
