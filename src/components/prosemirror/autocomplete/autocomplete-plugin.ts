@@ -33,7 +33,9 @@ import { getContentAt } from '@/components/prosemirror/helpers/state-helper'
 const doEnter: Command = () => {
   if (isBoxOpened()) {
     const box = getAutocompleteBox()!
+    //debugger
     const activeItem = box.getActiveItem()
+    console.log('## doEnter', activeItem)
     if (!activeItem) {
       return false
     } else {
@@ -299,6 +301,6 @@ function handleNoMatch(matchString: string, mode: MODE, view: EditorView) {
     box?.exit()
     return
   } else {
-    box?.setContinueAndEnterItem()
+    box?.setContinueAndEnterItem(matchString)
   }
 }

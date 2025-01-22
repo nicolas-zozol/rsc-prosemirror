@@ -248,7 +248,13 @@ export class AutocompleteBox {
     }
   }
 
-  public setContinueAndEnterItem() {
-    console.log('## setContinueAndEnterItem')
+  public setContinueAndEnterItem(matchString: string) {
+    const continueItem = document.createElement('div')
+    continueItem.textContent = 'Continue typing...'
+    continueItem.classList.add('continue-item')
+    this.box.appendChild(continueItem)
+    this.htmlItems = [continueItem]
+    this.activeIndex = -1
+    this.lastActiveItem = matchString
   }
 }
