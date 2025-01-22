@@ -16,7 +16,17 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     width: 200px;
     max-height: 150px;
-    overflow-y: auto;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+  }
+
+  .autocomplete-box::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar for Chrome, Edge, and Safari */
+  }
+
+  .autocomplete-box::-webkit-scrollbar-thumb {
+    //background-color: #ccc; /* Customize scrollbar thumb color */
+    border-radius: 4px; /* Round scrollbar thumb corners */
   }
 
   .suggestion-item {

@@ -173,8 +173,10 @@ export class AutocompleteBox {
    */
   close(): void {
     if (this.onClose) {
+      // should replace the text inside the temporary node
       this.onClose()
     }
+
     this.exit() // should replace
   }
 
@@ -197,18 +199,21 @@ export class AutocompleteBox {
   }
 
   // Handles keyboard navigation
-  public handleKeyDown(event: KeyboardEvent): void {
+  public handleKeyDown(key: string): void {
     if (!this.box || this.items.length === 0) return
+    const size = this.items.length
 
-    switch (event.key) {
+    switch (key) {
       case 'ArrowDown':
-        this.activeIndex = (this.activeIndex + 1) % this.items.length
-        this.render()
+        const activeIndex = Math.min(this.activeIndex + 1, size - 1)
+        console.log('## activeIndex', this.activeIndex, activeIndex)
+        this.setActiveIndex(activeIndex)
+        this.scrollToActiveItem(activeIndex)
         break
       case 'ArrowUp':
-        this.activeIndex =
-          (this.activeIndex - 1 + this.items.length) % this.items.length
-        this.render()
+        const activeIndexUp = Math.max(this.activeIndex - 1, 0)
+        this.setActiveIndex(activeIndexUp)
+        this.scrollToActiveItem(activeIndexUp)
         break
       case 'Enter':
         if (this.activeIndex !== -1) {
@@ -216,8 +221,17 @@ export class AutocompleteBox {
         }
         break
       case 'Escape':
-        this.close()
+        this.exit()
         break
+    }
+  }
+  private scrollToActiveItem(index: number): void {
+    if (this.htmlItems[index]) {
+      this.htmlItems[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'nearest',
+      })
     }
   }
 }

@@ -10,17 +10,13 @@ import {
   AutocompleteBox,
   getAutocompleteBox,
   isBoxOpened,
-  resetAutocompleteBox,
 } from './autocomplete-ui'
 import {
   detectWritingIntoTemporary,
   findTemporary,
 } from './autocomplete-helpers'
 import { getFakerByMode, getSchemaTypeByMode, MODE } from './mode'
-import {
-  getContentAt,
-  removeNode,
-} from '@/components/prosemirror/helpers/state-helper'
+import { getContentAt } from '@/components/prosemirror/helpers/state-helper'
 
 /**
  * This file handle the special keys and commands for the autocomplete feature.
@@ -197,13 +193,30 @@ const handleDelInterception: Command = (
   return true
 }
 
+const handleNavigation: (key: string) => Command = key => {
+  return () => {
+    if (isBoxOpened()) {
+      console.log('## handleNavigation', key)
+      const box = getAutocompleteBox()!
+      box.handleKeyDown(key)
+      return true
+    } else {
+      return false
+    }
+  }
+}
+
 export const autocompleteCommands = keymap({
   Enter: doEnter,
+  Tab: doEnter,
   '@': handleAtKey,
   '#': handleHashKey,
   '>': handleFlowKey,
   Delete: handleDelInterception,
   Backspace: handleDelInterception,
+  ArrowDown: handleNavigation('ArrowDown'),
+  ArrowUp: handleNavigation('ArrowUp'),
+  Escape: handleNavigation('Escape'),
 })
 
 // Function to show the autocomplete box
