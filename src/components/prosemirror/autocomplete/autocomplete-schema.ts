@@ -35,6 +35,17 @@ const autocompleteNodes: Record<string, NodeSpec> = {
       { class: 'mention', 'data-name': node.attrs.name },
       `@${node.attrs.name}`,
     ],
+    parseDOM: [
+      {
+        tag: 'span.mention', // Match <span> elements with class "mention"
+        getAttrs: dom => {
+          const element = dom as HTMLElement
+          return {
+            name: element.getAttribute('data-name') || '', // Extract `data-name`
+          }
+        },
+      },
+    ],
   },
 
   hashtag: {
@@ -47,6 +58,17 @@ const autocompleteNodes: Record<string, NodeSpec> = {
       { class: 'hashtag', 'data-name': node.attrs.name },
       `#${node.attrs.name}`,
     ],
+    parseDOM: [
+      {
+        tag: 'span.hashtag', // Match <span> elements with class "hashtag"
+        getAttrs: dom => {
+          const element = dom as HTMLElement
+          return {
+            name: element.getAttribute('data-name') || '', // Extract `data-name`
+          }
+        },
+      },
+    ],
   },
 
   flow: {
@@ -58,6 +80,17 @@ const autocompleteNodes: Record<string, NodeSpec> = {
       'span',
       { class: 'flow', 'data-name': node.attrs.name },
       `<>${node.attrs.name}`,
+    ],
+    parseDOM: [
+      {
+        tag: 'span.flow', // Match <span> elements with class "flow"
+        getAttrs: dom => {
+          const element = dom as HTMLElement
+          return {
+            name: element.getAttribute('data-name') || '', // Extract `data-name`
+          }
+        },
+      },
     ],
   },
 }
