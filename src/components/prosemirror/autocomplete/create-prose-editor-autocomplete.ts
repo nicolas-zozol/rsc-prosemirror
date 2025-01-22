@@ -1,5 +1,8 @@
 import { EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
+import { keymap } from 'prosemirror-keymap'
+import { baseKeymap } from 'prosemirror-commands'
+
 import { autocompleteSchema } from './autocomplete-schema'
 
 import { autocompleteCommands } from './autocomplete-plugin'
@@ -11,7 +14,12 @@ export function createProseEditorAutocomplete(
 ): ProseEditor {
   const state = EditorState.create({
     schema: autocompleteSchema,
-    plugins: [autocompleteCommands],
+    plugins: [
+      //history(),
+      //keymap({ 'Mod-z': undo, 'Mod-y': redo }),
+      autocompleteCommands,
+      keymap(baseKeymap),
+    ],
   })
 
   const view = new EditorView(domElement, {

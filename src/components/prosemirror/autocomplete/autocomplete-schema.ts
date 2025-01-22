@@ -1,8 +1,18 @@
-import { Schema, NodeSpec, MarkSpec } from 'prosemirror-model'
+import { Schema, NodeSpec, MarkSpec, DOMOutputSpec } from 'prosemirror-model'
+
+const pDOM: DOMOutputSpec = ['p', 0]
 
 const autocompleteNodes: Record<string, NodeSpec> = {
   doc: {
+    content: 'block+',
+  },
+  paragraph: {
     content: 'inline*',
+    group: 'block',
+    parseDOM: [{ tag: 'p' }],
+    toDOM() {
+      return pDOM
+    },
   },
   text: {
     group: 'inline',

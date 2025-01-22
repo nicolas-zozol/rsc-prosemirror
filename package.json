@@ -17,6 +17,7 @@
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.37.1",
     "prosemirror-keymap": "^1.2.2",
+    "prosemirror-commands": "^1.6.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

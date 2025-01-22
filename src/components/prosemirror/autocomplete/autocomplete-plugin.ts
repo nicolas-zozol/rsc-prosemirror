@@ -44,7 +44,7 @@ const doEnter: Command = () => {
     }
   }
 
-  return true
+  return false
 }
 
 // Keymap handler for the `@` character
@@ -146,8 +146,6 @@ const handleFlowKey: Command = (
     tr.setSelection(TextSelection.create(tr.doc, endPosition))
 
     dispatch(tr)
-  } else {
-    //console.log('### no dispatch')
   }
 
   // Show the autocomplete box
