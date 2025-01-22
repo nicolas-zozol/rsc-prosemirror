@@ -19,35 +19,28 @@ export function dispatchAutocompleteTransaction(
   view: EditorView,
   transaction: Transaction
 ) {
-  const initialState = view.state
   let newState = view.state.apply(transaction)
   view.updateState(newState)
-
-  const writingIntoTemporary = detectWritingIntoTemporary(initialState)
 
   const box = getAutocompleteBox()
   const tempNode = findTemporary(newState)
 
-  if (writingIntoTemporary && box && tempNode) {
+  // Dispatch intercepted to modify the box UI
+  // Equivalent of a useEffect, modifies only outside the ProseMirror system
+  if (box && tempNode) {
     const matchString = extractMatchString(newState, box.mode)
 
     box
       .update(matchString)
       .then(active => {
         if (active.found) {
-          console.log('## active', active.found)
+          //.console.log('## active', active.found)
         } else {
-          console.log('## not active, text replacing')
-          // box exited, replace the temporary node by the matchString
-          box.exit()
-          const { pos, node } = tempNode
-          // That depends on the mode !
-          newState = replaceNodeByText(newState, node, pos, matchString)
-          view.updateState(newState)
+          //console.log('## not active')
         }
       })
       .catch(console.error)
   } else {
-    //console.log('Not writing into tempPeople')
+    //console.log('Not writing into temporary')
   }
 }

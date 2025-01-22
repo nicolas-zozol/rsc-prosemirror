@@ -257,6 +257,10 @@ function showAutocompleteBox(mode: MODE, view: EditorView): AutocompleteBox {
 
       console.log('Autocomplete box closed')
     },
+    onNoMatch: matchString => {
+      console.log('No match for:', matchString)
+      handleNoMatch(matchString, mode, view)
+    },
   })
 
   autocomplete.setPosition(x + 10, y + 25) // Adjust position
@@ -283,5 +287,18 @@ function insertModeNode(view: EditorView, name: string, mode: MODE): void {
     const transaction = tr.replaceWith(pos, pos + node.nodeSize, modeNode)
     tr.insertText(' ')
     dispatch(transaction)
+  }
+}
+
+function handleNoMatch(matchString: string, mode: MODE, view: EditorView) {
+  const { state, dispatch } = view
+  const box = getAutocompleteBox()
+  if (mode === 'PEOPLE') {
+    const stateWithoutPeople = replaceTemporaryNode(state)
+    view.updateState(stateWithoutPeople)
+    box?.exit()
+    return
+  } else {
+    box?.setContinueAndEnterItem()
   }
 }

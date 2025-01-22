@@ -33,6 +33,7 @@ export function extractMatchString(state: EditorState, mode: MODE): string {
   return node.node.textContent?.substring(discriminator) || ''
 }
 
+// TODO: replace ths with a transaction
 export function replaceTemporaryNode(state: EditorState): EditorState {
   const nodeWithPos = findTemporary(state)
   if (!nodeWithPos) {
@@ -51,6 +52,5 @@ export function replaceNodeByText(
 ): EditorState {
   const { tr, schema } = state
   const nodeSize = node.nodeSize
-  tr.replaceWith(pos, pos + nodeSize, schema.text(text))
-  return state.apply(tr)
+  return state.apply(tr.replaceWith(pos, pos + nodeSize, schema.text(text)))
 }

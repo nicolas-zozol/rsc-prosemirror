@@ -4,7 +4,8 @@ interface AutocompleteBoxOptions {
   container: HTMLElement // The parent `position: relative` container
   fetch: (matchString: string) => Promise<string[]> // Fetch logic for autocomplete items
   onSelect: (selectedItem: string) => void // Callback when an item is selected
-  onClose: () => void // Optional callback when the box is dismissed
+  onClose: () => void // callback when the box is dismissed
+  onNoMatch(matchString: string): void // callback when no match is found
 }
 
 let singleton: AutocompleteBox | undefined = undefined
@@ -43,6 +44,7 @@ export class AutocompleteBox {
   private readonly fetch: (matchString: string) => Promise<string[]>
   public onSelect: (selectedItem: string) => void
   public onClose: () => void
+  public onNoMatch: (matchString: string) => void
   private box: HTMLDivElement
   private items: string[] = []
   htmlItems: HTMLDivElement[] = []
@@ -53,11 +55,12 @@ export class AutocompleteBox {
     public mode: MODE,
     options: AutocompleteBoxOptions
   ) {
-    const { container, fetch, onSelect, onClose } = options
+    const { container, fetch, onSelect, onClose, onNoMatch } = options
     this.container = container
     this.fetch = fetch
     this.onSelect = onSelect
     this.onClose = onClose
+    this.onNoMatch = onNoMatch
 
     this.box = this.initBox()
   }
@@ -80,7 +83,11 @@ export class AutocompleteBox {
   async update(input: string): Promise<ActiveItem> {
     this.items = await this.fetch(input)
     this.render()
-    return this.updateActive(input)
+    const active = this.updateActive(input)
+    if (!active.found) {
+      this.onNoMatch(input)
+    }
+    return active
   }
 
   private initBox(): HTMLDivElement {
@@ -239,5 +246,9 @@ export class AutocompleteBox {
         inline: 'nearest',
       })
     }
+  }
+
+  public setContinueAndEnterItem() {
+    console.log('## setContinueAndEnterItem')
   }
 }
