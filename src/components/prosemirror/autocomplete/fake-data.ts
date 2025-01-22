@@ -1,6 +1,6 @@
 const fakeUsers = [
   'Kevin',
-  'James',
+  'Julien',
   'Jane',
   'Jacob',
   'Josh',
